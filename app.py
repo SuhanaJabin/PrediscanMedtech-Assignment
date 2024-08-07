@@ -6,12 +6,13 @@ import zipfile
 from PIL import Image
 import numpy as np
 from tensorflow.keras.models import load_model
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 app.config['ALLOWED_EXTENSIONS'] = {'xlsx', 'zip'}
 app.config['IMAGE_FOLDER'] = os.path.normpath('C:/Users/user/Desktop/mywork/Prediscan/uploads/extracted_images/Retinal Image Folder')
-
+CORS(app) 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def allowed_file(filename, extensions):
