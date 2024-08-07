@@ -65,7 +65,7 @@ def process_image(image_path):
          
             return prediction.flatten()
     except Exception as e:
-        print(f"Error processing  image {image_path}: {e}")
+        print(f"Error processing   image {image_path}: {e}")
         return None
 
 def update_image_paths(df):
