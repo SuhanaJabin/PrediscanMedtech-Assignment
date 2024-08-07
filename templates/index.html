@@ -40,10 +40,10 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('upload-form').addEventListener('submit', function (event) {
-                event.preventDefault(); // Prevent the default form submission
+                event.preventDefault(); 
 
                 if (!validateFileExtensions()) {
-                    return; // Stop form submission if file types are not valid
+                    return; 
                 }
 
                 showLoader();
@@ -54,17 +54,17 @@
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.blob()) // Get the response as a blob
+                .then(response => response.blob()) 
                 .then(blob => {
                     hideLoader();
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'updated_file.xlsx'; // Specify the default file name
+                    a.download = 'updated_file.xlsx'; 
                     document.body.appendChild(a);
                     a.click();
                     a.remove();
-                    window.URL.revokeObjectURL(url); // Clean up
+                    window.URL.revokeObjectURL(url); 
                 })
                 .catch(error => {
                     hideLoader();
@@ -92,7 +92,6 @@
         </form>
     </div>
 
-    <!-- Loader HTML -->
     <div id="loader-container" class="loader-container" style="display: none;">
         <div class="loader"></div>
     </div>
