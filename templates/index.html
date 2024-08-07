@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload Files</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function showLoader() {
+            document.getElementById('loader-container').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader-container').style.display = 'none';
+        }
+       
+        function validateFileExtensions() {
+            const excelInput = document.getElementById('excel');
+            const zipInput = document.getElementById('zip');
+            const validExcelExtensions = ['.xlsx', '.xls'];
+            const validZipExtensions = ['.zip'];
+
+            const excelFileName = excelInput.value.toLowerCase();
+            const zipFileName = zipInput.value.toLowerCase();
+            
+            const isExcelValid = validExcelExtensions.some(ext => excelFileName.endsWith(ext));
+            const isZipValid = validZipExtensions.some(ext => zipFileName.endsWith(ext));
+
+            if (!isExcelValid) {
+                alert('Please upload a valid Excel file (.xlsx or .xls).');
+                return false;
+            }
+
+            if (!isZipValid) {
+                alert('Please upload a valid Zip file (.zip).');
+                return false;
+            }
+
+            return true;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('upload-form').addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                if (!validateFileExtensions()) {
+                    return; // Stop form submission if file types are not valid
+                }
+
+                showLoader();
+
+                const formData = new FormData(this);
+
+                fetch('/', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.blob()) // Get the response as a blob
+                .then(blob => {
+                    hideLoader();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'updated_file.xlsx'; // Specify the default file name
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url); // Clean up
+                })
+                .catch(error => {
+                    hideLoader();
+                    console.error('Error:', error);
+                });
+            });
+        });
+        
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container rajdhani-body">
+        <h1 style="letter-spacing: 4px;">Diabetic Retinopathy Analysis</h1>
+        <form id="upload-form" method="post" enctype="multipart/form-data">
+            <label for="excel">Excel Sheet:</label>
+            <input type="file" name="excel" id="excel" required>
+            <br><br>
+            <label for="zip">Zip Folder:</label>
+            <input type="file" name="zip" id="zip" required>
+            <br><br>
+            <input class="button" type="submit" value="Upload and Download">
+        </form>
+    </div>
+
+    <!-- Loader HTML -->
+    <div id="loader-container" class="loader-container" style="display: none;">
+        <div class="loader"></div>
+    </div>
+</body>
+</html>
